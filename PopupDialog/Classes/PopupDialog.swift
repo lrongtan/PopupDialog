@@ -81,6 +81,8 @@ final public class PopupDialog: UIViewController {
      - parameter message:          The dialog message
      - parameter image:            The dialog image
      - parameter buttonAlignment:  The dialog button alignment
+     - parameter buttonLayoutMargins:   The dialog buttonStackView layoutMargins
+     - parameter buttonSpacing:         The dialog buttonStackView spacing
      - parameter transitionStyle:  The dialog transition style
      - parameter preferredWidth:   The preferred width for iPad screens
      - parameter tapGestureDismissal: Indicates if dialog can be dismissed via tap gesture
@@ -95,6 +97,8 @@ final public class PopupDialog: UIViewController {
                 message: String?,
                 image: UIImage? = nil,
                 buttonAlignment: NSLayoutConstraint.Axis = .vertical,
+                buttonLayoutMargins: UIEdgeInsets = UIEdgeInsets.zero,
+                buttonSpacing: CGFloat = 0,
                 transitionStyle: PopupDialogTransitionStyle = .bounceUp,
                 preferredWidth: CGFloat = 340,
                 tapGestureDismissal: Bool = true,
@@ -111,6 +115,8 @@ final public class PopupDialog: UIViewController {
         // Call designated initializer
         self.init(viewController: viewController,
                   buttonAlignment: buttonAlignment,
+                  buttonLayoutMargins: buttonLayoutMargins,
+                  buttonSpacing: buttonSpacing,
                   transitionStyle: transitionStyle,
                   preferredWidth: preferredWidth,
                   tapGestureDismissal: tapGestureDismissal,
@@ -124,6 +130,8 @@ final public class PopupDialog: UIViewController {
 
      - parameter viewController:   A custom view controller to be displayed
      - parameter buttonAlignment:  The dialog button alignment
+     - parameter buttonLayoutMargins:   The dialog buttonStackView layoutMargins
+     - parameter buttonSpacing:         The dialog buttonStackView spacing
      - parameter transitionStyle:  The dialog transition style
      - parameter preferredWidth:   The preferred width for iPad screens
      - parameter tapGestureDismissal: Indicates if dialog can be dismissed via tap gesture
@@ -136,6 +144,8 @@ final public class PopupDialog: UIViewController {
     @objc public init(
         viewController: UIViewController,
         buttonAlignment: NSLayoutConstraint.Axis = .vertical,
+        buttonLayoutMargins: UIEdgeInsets = UIEdgeInsets.zero,
+        buttonSpacing: CGFloat = 0,
         transitionStyle: PopupDialogTransitionStyle = .bounceUp,
         preferredWidth: CGFloat = 340,
         tapGestureDismissal: Bool = true,
@@ -166,6 +176,11 @@ final public class PopupDialog: UIViewController {
         addChild(viewController)
         popupContainerView.stackView.insertArrangedSubview(viewController.view, at: 0)
         popupContainerView.buttonStackView.axis = buttonAlignment
+        popupContainerView.buttonStackView.spacing = buttonSpacing
+        if buttonLayoutMargins != UIEdgeInsets.zero {
+            popupContainerView.buttonStackView.isLayoutMarginsRelativeArrangement = true
+            popupContainerView.buttonStackView.layoutMargins = buttonLayoutMargins
+        }
         viewController.didMove(toParent: self)
 
         // Allow for dialog dismissal on background tap
